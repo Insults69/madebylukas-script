@@ -4,7 +4,7 @@
 // @version      2.3
 // @match        https://*.tankionline.com/play/
 // @match        https://*.tankionline.com/browser-public/*
-// @run-at       document-start
+// @run-at       document-idle
 // @grant        GM_info
 // @grant        GM_xmlhttpRequest
 // @grant        GM_openInTab
