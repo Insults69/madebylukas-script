@@ -1,9 +1,9 @@
 {
-  "version": "2.3",
+  "version": "2.2",
   "script": "https://raw.githubusercontent.com/Insults69/madebylukas-script/main/main.obf.js",
   "install": "https://raw.githubusercontent.com/Insults69/madebylukas-script/main/MadeByLukas.user.js",
-  "discord": "1171508034359545907",
+  "discord": "117158004359545907",
   "changelog": [
-    "Bug Fixes"
+    "Initial public release"
   ]
 }
