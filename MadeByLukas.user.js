@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Made By Lukas
 // @namespace    https://github.com/Insults69
-// @version      2.3
+// @version      2.4
 // @match        https://*.tankionline.com/play/
 // @match        https://*.tankionline.com/browser-public/*
 // @run-at       document-idle
