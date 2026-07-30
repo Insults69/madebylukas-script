@@ -9,6 +9,7 @@
 // @grant        GM_xmlhttpRequest
 // @grant        GM_openInTab
 // @connect      raw.githubusercontent.com
+// @connect      api.capmonster.cloud
 // @downloadURL  https://raw.githubusercontent.com/Insults69/madebylukas-script/main/MadeByLukas.user.js
 // @updateURL    https://raw.githubusercontent.com/Insults69/madebylukas-script/main/MadeByLukas.user.js
 // ==/UserScript==
