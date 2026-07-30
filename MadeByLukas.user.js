@@ -5,7 +5,6 @@
 // @match        https://*.tankionline.com/play/
 // @match        https://*.tankionline.com/browser-public/*
 // @run-at       document-start
-
 // @grant        GM_info
 // @grant        GM_xmlhttpRequest
 // @grant        GM_openInTab
@@ -13,10 +12,8 @@
 // @grant        GM_setValue
 // @grant        GM_deleteValue
 // @grant        unsafeWindow
-
 // @connect      raw.githubusercontent.com
 // @connect      api.capmonster.cloud
-
 // @downloadURL  https://raw.githubusercontent.com/Insults69/madebylukas-script/main/MadeByLukas.user.js
 // @updateURL    https://raw.githubusercontent.com/Insults69/madebylukas-script/main/MadeByLukas.user.js
 // ==/UserScript==
