@@ -59,12 +59,9 @@
     if (window[START_FLAG]) return;
     window[START_FLAG] = true;
 
-    waitForBody(() => {
+   waitForBody(() => {
   try {
-    const script = document.createElement("script");
-    script.textContent = code;
-    document.documentElement.appendChild(script);
-    script.remove();
+    Function(code)();
   } catch (e) {
     console.error("[MadeByLukas] Main error:", e);
   }
