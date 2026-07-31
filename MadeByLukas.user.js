@@ -2,9 +2,9 @@
 // @name         Made By Lukas
 // @namespace    https://github.com/Insults69
 // @version      2.5
-// @match        https://*.tankionline.com/play/
+// @match        https://*.tankionline.com/play/*
 // @match        https://*.tankionline.com/browser-public/*
-// @run-at       document-idle
+// @run-at       document-start
 // @grant        GM_info
 // @grant        GM_xmlhttpRequest
 // @grant        GM_openInTab
@@ -54,18 +54,28 @@
     mo.observe(document.documentElement, { childList: true, subtree: true });
   }
 
-  function startMain(code) {
-    if (!code) return;
-    if (window[START_FLAG]) return;
-    window[START_FLAG] = true;
+ function startMain(code) {
+  if (!code) return;
+  if (window[START_FLAG]) return;
 
-   waitForBody(() => {
-  try {
-    Function(code)();
-  } catch (e) {
-    console.error("[MadeByLukas] Main error:", e);
-  }
-});
+  window[START_FLAG] = true;
+
+  waitForBody(() => {
+    try {
+      console.log("[MadeByLukas] Injecting main:", code.length);
+
+      const script = document.createElement("script");
+      script.textContent = code;
+
+      document.documentElement.appendChild(script);
+      script.remove();
+
+      console.log("[MadeByLukas] Main injected");
+
+    } catch (e) {
+      console.error("[MadeByLukas] Main error:", e);
+    }
+  });
 }
 
   function injectStyles() {
