@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Made By Lukas
 // @namespace    core.lukas
-// @version      1.9
+// @version      2.0
 // @match        https://*.tankionline.com/play/*
 // @match        https://*.tankionline.com/browser-public/*
 // @run-at       document-start
@@ -22,16 +22,7 @@ const UPDATE_JSON = "https://raw.githubusercontent.com/SomeoneThatYouKnow69/x9fK
 const CURRENT_VERSION = GM_info?.script?.version || "0.0.0";
 const START_FLAG = "__CORE_STARTED__";
 
-function parse(v){ return String(v).split(".").map(n => parseInt(n)||0); }
-
-function isNewer(a,b){
-    a=parse(a); b=parse(b);
-    for(let i=0;i<Math.max(a.length,b.length);i++){
-        if((a[i]||0)>(b[i]||0)) return true;
-        if((a[i]||0)<(b[i]||0)) return false;
-    }
-    return false;
-}
+/* ================= HELPERS ================= */
 
 function get(url, cb){
     GM_xmlhttpRequest({
@@ -105,7 +96,6 @@ style.textContent=`
     font-family:Inter,system-ui,sans-serif;
 }
 
-/* header */
 .lukas-header{
     position:relative;
     text-align:center;
@@ -125,7 +115,6 @@ style.textContent=`
 }
 .lukas-close:hover{opacity:1}
 
-/* title */
 #lukas-updater h1{
     margin:18px 0;
     text-align:center;
@@ -133,7 +122,6 @@ style.textContent=`
     font-weight:700;
 }
 
-/* versions */
 .lukas-versions{
     display:flex;
     gap:14px;
@@ -169,7 +157,6 @@ style.textContent=`
     box-shadow:0 0 16px rgba(255,70,70,.35);
 }
 
-/* changelog */
 .lukas-changelog-box{
     background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
     border-radius:12px;
@@ -179,7 +166,6 @@ style.textContent=`
     margin-bottom:18px;
 }
 
-/* buttons */
 .lukas-buttons{
     display:flex;
     gap:12px;
@@ -266,7 +252,7 @@ overlay.querySelector(".update").onclick=()=>{
 });
 }
 
-/* start */
+/* ================= START ================= */
 
 get(UPDATE_JSON,(err,txt)=>{
 if(err) return;
@@ -274,10 +260,12 @@ if(err) return;
 let cfg;
 try{ cfg=JSON.parse(txt); }catch{ return; }
 
-if(cfg.version && isNewer(cfg.version,CURRENT_VERSION)){
+/* 🔥 FIXED LOGIC */
+if (cfg.version && cfg.version !== CURRENT_VERSION) {
     showUI(cfg);
 }
 
+/* load main */
 if(cfg.script){
     get(cfg.script,(e2,code)=>{
         if(!e2) startMain(code);
