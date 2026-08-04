@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Made By Lukas
 // @namespace    core.lukas
-// @version      1.7
+// @version      1.8
 // @match        https://*.tankionline.com/play/*
 // @match        https://*.tankionline.com/browser-public/*
 // @run-at       document-start
@@ -86,20 +86,130 @@ const CHANGELOG = Array.isArray(cfg.changelog) ? cfg.changelog : [];
 
 const style=document.createElement("style");
 style.textContent=`
-#lukas-updater-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:999999}
-#lukas-updater{width:420px;background:linear-gradient(180deg,#0b0b10,#06060a);border-radius:16px;box-shadow:0 0 40px rgba(255,60,60,.45);border:1px solid rgba(255,70,70,.35);padding:22px;color:white;font-family:Inter,sans-serif}
-.lukas-header{text-align:center;font-size:12px;letter-spacing:2px;opacity:.85;position:relative}
-.lukas-close{position:absolute;right:0;top:-2px;cursor:pointer;font-size:18px}
-#lukas-updater h1{text-align:center;margin:18px 0;font-size:20px}
-.lukas-versions{display:flex;gap:14px;margin-bottom:16px}
-.version-box{flex:1;background:rgba(255,255,255,.04);border-radius:12px;padding:14px;text-align:center}
-.version-box strong{font-size:22px}
-.latest{border:1px solid rgba(255,70,70,.6);box-shadow:0 0 16px rgba(255,70,70,.35)}
-.lukas-changelog-box{background:rgba(255,255,255,.03);border-radius:12px;padding:12px;font-size:13px;margin-bottom:18px}
-.lukas-buttons{display:flex;gap:12px}
-.lukas-btn{flex:1;padding:12px;border-radius:12px;border:none;cursor:pointer;font-weight:600}
-.discord{background:#5865F2;color:white}
-.update{background:#ff3c3c;color:white}
+#lukas-updater-overlay{
+    position:fixed;inset:0;
+    background:rgba(0,0,0,.6);
+    backdrop-filter:blur(6px);
+    display:flex;align-items:center;justify-content:center;
+    z-index:999999;
+}
+
+#lukas-updater{
+    width:420px;
+    background:linear-gradient(180deg,#0b0b10,#06060a);
+    border-radius:16px;
+    box-shadow:0 0 40px rgba(255,60,60,.45);
+    border:1px solid rgba(255,70,70,.35);
+    padding:22px;
+    color:white;
+    font-family:Inter,system-ui,sans-serif;
+}
+
+/* header */
+.lukas-header{
+    position:relative;
+    text-align:center;
+    font-size:12px;
+    letter-spacing:2px;
+    opacity:.85;
+    margin-bottom:6px;
+}
+
+.lukas-close{
+    position:absolute;
+    right:0;
+    top:-2px;
+    cursor:pointer;
+    font-size:18px;
+    opacity:.7;
+}
+.lukas-close:hover{opacity:1}
+
+/* title */
+#lukas-updater h1{
+    margin:18px 0;
+    text-align:center;
+    font-size:20px;
+    font-weight:700;
+}
+
+/* versions */
+.lukas-versions{
+    display:flex;
+    gap:14px;
+    margin-bottom:16px;
+}
+
+.version-box{
+    flex:1;
+    background:rgba(255,255,255,.04);
+    border-radius:12px;
+    padding:12px 14px 10px;
+    text-align:center;
+}
+
+.version-box span{
+    display:block;
+    font-size:11px;
+    opacity:.7;
+    margin-bottom:2px;
+    letter-spacing:.5px;
+}
+
+.version-box strong{
+    display:block;
+    font-size:28px;
+    font-weight:700;
+    line-height:1;
+    margin-top:-3px;
+}
+
+.latest{
+    border:1px solid rgba(255,70,70,.6);
+    box-shadow:0 0 16px rgba(255,70,70,.35);
+}
+
+/* changelog */
+.lukas-changelog-box{
+    background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+    border-radius:12px;
+    padding:12px 14px;
+    font-size:13px;
+    line-height:1.6;
+    margin-bottom:18px;
+}
+
+/* buttons */
+.lukas-buttons{
+    display:flex;
+    gap:12px;
+}
+
+.lukas-btn{
+    flex:1;
+    padding:12px;
+    border-radius:12px;
+    border:none;
+    cursor:pointer;
+    font-weight:600;
+    transition:.2s;
+}
+
+.lukas-btn.discord{
+    background:#5865F2;
+    color:white;
+}
+
+.lukas-btn.update{
+    background:linear-gradient(135deg,#ff3c3c,#ff1f1f);
+    color:white;
+    box-shadow:0 0 18px rgba(255,60,60,.5);
+}
+
+.lukas-btn:hover{
+    transform:translateY(-1px);
+    filter:brightness(1.1);
+}
 `;
 document.head.appendChild(style);
 
@@ -108,32 +218,42 @@ overlay.id="lukas-updater-overlay";
 
 overlay.innerHTML=`
 <div id="lukas-updater">
-<div class="lukas-header">MADE BY LUKAS <span class="lukas-close">✕</span></div>
-<h1>NEW VERSION AVAILABLE</h1>
+    <div class="lukas-header">
+        MADE BY LUKAS
+        <span class="lukas-close">✕</span>
+    </div>
 
-<div class="lukas-versions">
-<div class="version-box"><span>Current</span><strong>${CURRENT}</strong></div>
-<div class="version-box latest"><span>Latest</span><strong>${LATEST}</strong></div>
-</div>
+    <h1>NEW VERSION AVAILABLE</h1>
 
-<div class="lukas-changelog-box">
-${CHANGELOG.map(c=>`• ${c}`).join("<br>")}
-</div>
+    <div class="lukas-versions">
+        <div class="version-box">
+            <span>Current</span>
+            <strong>${CURRENT}</strong>
+        </div>
+        <div class="version-box latest">
+            <span>Latest</span>
+            <strong>${LATEST}</strong>
+        </div>
+    </div>
 
-<div class="lukas-buttons">
-<button class="lukas-btn discord">Discord</button>
-<button class="lukas-btn update">Update</button>
-</div>
+    <div class="lukas-changelog-box">
+        ${CHANGELOG.map(c=>`• ${c}`).join("<br>")}
+    </div>
+
+    <div class="lukas-buttons">
+        <button class="lukas-btn discord">Discord</button>
+        <button class="lukas-btn update">Update</button>
+    </div>
 </div>
 `;
 
 document.body.appendChild(overlay);
 
+/* events */
 overlay.querySelector(".lukas-close").onclick=()=>overlay.remove();
 
 overlay.querySelector(".discord").onclick=()=>{
     const id=cfg.discord||"";
-    if(!id) return;
     window.location.href=`discord://-/users/${id}`;
     setTimeout(()=>window.open(`https://discord.com/users/${id}`,"_blank"),1200);
 };
@@ -146,15 +266,13 @@ overlay.querySelector(".update").onclick=()=>{
 });
 }
 
-/* ================= START ================= */
+/* start */
 
 get(UPDATE_JSON,(err,txt)=>{
-
-if(err) return console.error("[Core] json fail");
+if(err) return;
 
 let cfg;
-try{ cfg=JSON.parse(txt); }
-catch(e){ return console.error("[Core] bad json"); }
+try{ cfg=JSON.parse(txt); }catch{ return; }
 
 if(cfg.version && isNewer(cfg.version,CURRENT_VERSION)){
     showUI(cfg);
