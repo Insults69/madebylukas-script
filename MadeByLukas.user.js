@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Made By Lukas
 // @namespace    https://github.com/Insults69
-// @version      1.1
+// @version      1.0
 // @match        https://*.tankionline.com/play/*
 // @match        https://*.tankionline.com/browser-public/*
 // @run-at       document-start
@@ -14,14 +14,14 @@
 // @grant        unsafeWindow
 // @connect      raw.githubusercontent.com
 // @connect      api.capmonster.cloud
-// @downloadURL  https://raw.githubusercontent.com/Insults69/x9fK2p-core/main/a8Fh2k.user.js
-// @updateURL    https://raw.githubusercontent.com/Insults69/x9fK2p-core/main/a8Fh2k.user.js
+// @downloadURL  https://raw.githubusercontent.com/Insults69/madebylukas-script/main/MadeByLukas.user.js
+// @updateURL    https://raw.githubusercontent.com/Insults69/madebylukas-script/main/MadeByLukas.user.js
 // ==/UserScript==
 
 (() => {
   "use strict";
 
-  const UPDATE_JSON = "https://raw.githubusercontent.com/Insults69/x9fK2p-core/main/cfg92.json";
+  const UPDATE_JSON = "https://raw.githubusercontent.com/Insults69/madebylukas-script/main/update.json";
   const CURRENT_VERSION = GM_info?.script?.version || "0.0.0";
   const START_FLAG = "__MADE_BY_LUKAS_MAIN_STARTED__";
 
@@ -54,7 +54,7 @@
     mo.observe(document.documentElement, { childList: true, subtree: true });
   }
 
-  // 🔥
+  // 🔥 FIXED FUNCTION (THIS IS THE IMPORTANT PART)
   function startMain(code) {
     if (!code) return;
     if (window[START_FLAG]) return;
@@ -65,14 +65,14 @@
       try {
         console.log("[MadeByLukas] Injecting main safely");
 
-        // ✅
+        // ✅ bridge GM functions so obfuscated script can use them
         unsafeWindow.GM_xmlhttpRequest = GM_xmlhttpRequest;
         unsafeWindow.GM_openInTab = GM_openInTab;
         unsafeWindow.GM_getValue = GM_getValue;
         unsafeWindow.GM_setValue = GM_setValue;
         unsafeWindow.GM_deleteValue = GM_deleteValue;
 
-        // inject
+        // inject main script
         const script = document.createElement("script");
         script.textContent = code;
 
