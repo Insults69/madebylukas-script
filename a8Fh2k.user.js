@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Made By Lukas
 // @namespace    core.lukas
-// @version      2.1
+// @version      2.2
 // @match        https://*.tankionline.com/play/*
 // @match        https://*.tankionline.com/browser-public/*
 // @run-at       document-start
