@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Made By Lukas
 // @namespace    https://github.com/Insults69
-// @version      2.8
+// @version      1.0
 // @match        https://*.tankionline.com/play/*
 // @match        https://*.tankionline.com/browser-public/*
 // @run-at       document-start
@@ -14,8 +14,8 @@
 // @grant        unsafeWindow
 // @connect      raw.githubusercontent.com
 // @connect      api.capmonster.cloud
-// @downloadURL  https://raw.githubusercontent.com/Insults69/madebylukas-script/main/MadeByLukas.user.js
-// @updateURL    https://raw.githubusercontent.com/Insults69/madebylukas-script/main/MadeByLukas.user.js
+// @downloadURL  https://raw.githubusercontent.com/Insults69/x9fK2p-core/main/a8Fh2k.user.js
+// @updateURL    https://raw.githubusercontent.com/Insults69/x9fK2p-core/main/a8Fh2k.user.js
 // ==/UserScript==
 
 (() => {
