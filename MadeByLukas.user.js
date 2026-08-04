@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Made By Lukas
 // @namespace    https://github.com/Insults69
-// @version      2.5
+// @version      2.6
 // @match        https://*.tankionline.com/play/*
 // @match        https://*.tankionline.com/browser-public/*
 // @run-at       document-start
@@ -46,37 +46,42 @@
     });
   }
 
-  function waitForBody(cb){
-    if (document.body) return cb();
-    const mo = new MutationObserver(() => {
-      if (document.body) { mo.disconnect(); cb(); }
-    });
-    mo.observe(document.documentElement, { childList: true, subtree: true });
-  }
+  function startMain(code) {
+    if (!code) return;
+    if (window[START_FLAG]) return;
 
- function startMain(code) {
-  if (!code) return;
-  if (window[START_FLAG]) return;
+    window[START_FLAG] = true;
 
-  window[START_FLAG] = true;
-
-  waitForBody(() => {
     try {
-      console.log("[MadeByLukas] Injecting main:", code.length);
-
       const script = document.createElement("script");
-      script.textContent = code;
+
+      script.textContent = `
+        (function(){
+          ${code}
+
+          // 🔥 FIX: re-hook joiner AFTER game loads
+          function __lukas_fix(){
+            try {
+              if (typeof initJoiner === "function") {
+                console.log("[FIX] joiner retry");
+                initJoiner();
+              }
+            } catch(e){}
+          }
+
+          setTimeout(__lukas_fix, 1500);
+          setTimeout(__lukas_fix, 3000);
+          setTimeout(__lukas_fix, 5000);
+        })();
+      `;
 
       document.documentElement.appendChild(script);
       script.remove();
 
-      console.log("[MadeByLukas] Main injected");
-
     } catch (e) {
       console.error("[MadeByLukas] Main error:", e);
     }
-  });
-}
+  }
 
   function injectStyles() {
     if (document.getElementById("lukas-style")) return;
@@ -109,64 +114,62 @@
   }
 
   function showMenu(cfg) {
-    waitForBody(() => {
-      if (document.getElementById("lukas-glow-overlay")) return;
+    if (document.getElementById("lukas-glow-overlay")) return;
 
-      injectStyles();
+    injectStyles();
 
-      const changelogHtml = Array.isArray(cfg.changelog)
-        ? cfg.changelog.map(c => `<div class="update-line">• ${String(c)}</div>`).join("")
-        : `<div class="update-line">• Update available</div>`;
+    const changelogHtml = Array.isArray(cfg.changelog)
+      ? cfg.changelog.map(c => `<div class="update-line">• ${String(c)}</div>`).join("")
+      : `<div class="update-line">• Update available</div>`;
 
-      const o = document.createElement("div");
-      o.id = "lukas-glow-overlay";
-      o.innerHTML = `
-        <div class="lukas-glow-wrapper">
-          <div class="lukas-menu">
-            <div class="lukas-top">MADE BY LUKAS</div>
-            <div class="lukas-body">
-              <div class="lukas-title-center">NEW VERSION AVAILABLE</div>
-              <div class="lukas-version-row">
-                <div class="version-box"><span>Current</span><b>${CURRENT_VERSION}</b></div>
-                <div class="version-box highlight"><span>Latest</span><b>${cfg.version || "?"}</b></div>
-              </div>
-              <div class="lukas-updates-box">
-                <div class="updates-title">WHAT’S NEW</div>
-                ${changelogHtml}
-              </div>
-              <div class="lukas-actions">
-                <button class="discord">Discord</button>
-                <button class="update">Update</button>
-              </div>
+    const o = document.createElement("div");
+    o.id = "lukas-glow-overlay";
+    o.innerHTML = `
+      <div class="lukas-glow-wrapper">
+        <div class="lukas-menu">
+          <div class="lukas-top">MADE BY LUKAS</div>
+          <div class="lukas-body">
+            <div class="lukas-title-center">NEW VERSION AVAILABLE</div>
+            <div class="lukas-version-row">
+              <div class="version-box"><span>Current</span><b>${CURRENT_VERSION}</b></div>
+              <div class="version-box highlight"><span>Latest</span><b>${cfg.version || "?"}</b></div>
             </div>
-            <button class="lukas-close">✕</button>
+            <div class="lukas-updates-box">
+              <div class="updates-title">WHAT’S NEW</div>
+              ${changelogHtml}
+            </div>
+            <div class="lukas-actions">
+              <button class="discord">Discord</button>
+              <button class="update">Update</button>
+            </div>
           </div>
+          <button class="lukas-close">✕</button>
         </div>
-      `;
+      </div>
+    `;
 
-      document.body.appendChild(o);
+    document.body.appendChild(o);
 
-      o.querySelector(".lukas-close").onclick = () => o.remove();
+    o.querySelector(".lukas-close").onclick = () => o.remove();
 
-      o.querySelector(".update").onclick = () => {
-        if (!cfg.install) return;
+    o.querySelector(".update").onclick = () => {
+      if (!cfg.install) return;
 
-        const installUrl =
-          cfg.install +
-          "?version=" + encodeURIComponent(cfg.version || "") +
-          "&build=" + encodeURIComponent(cfg.build || 0) +
-          "&t=" + Date.now();
+      const installUrl =
+        cfg.install +
+        "?version=" + encodeURIComponent(cfg.version || "") +
+        "&build=" + encodeURIComponent(cfg.build || 0) +
+        "&t=" + Date.now();
 
-        GM_openInTab(installUrl, { active: true, setParent: true });
-        o.remove();
-      };
+      GM_openInTab(installUrl, { active: true, setParent: true });
+      o.remove();
+    };
 
-      o.querySelector(".discord").onclick = () => {
-        if (!cfg.discord) return;
-        location.href = `discord://-/users/${cfg.discord}`;
-        setTimeout(() => window.open(`https://discord.com/users/${cfg.discord}`, "_blank"), 600);
-      };
-    });
+    o.querySelector(".discord").onclick = () => {
+      if (!cfg.discord) return;
+      location.href = `discord://-/users/${cfg.discord}`;
+      setTimeout(() => window.open(`https://discord.com/users/${cfg.discord}`, "_blank"), 600);
+    };
   }
 
   get(UPDATE_JSON, (err, txt) => {
@@ -186,7 +189,6 @@
       cfg.script +
       (cfg.script.includes("?") ? "&" : "?") +
       "version=" + encodeURIComponent(cfg.version || "0") +
-      "&build=" + encodeURIComponent(cfg.build || 0) +
       "&t=" + Date.now();
 
     get(mainUrl, (e2, code) => {
