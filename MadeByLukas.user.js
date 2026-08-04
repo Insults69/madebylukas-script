@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Made By Lukas
-// @namespace    https://github.com/Insults69
+// @namespace    https://github.com/SomeoneThatYouKnow69
 // @version      1.1
 // @match        https://*.tankionline.com/play/*
 // @match        https://*.tankionline.com/browser-public/*
@@ -54,7 +54,7 @@
     mo.observe(document.documentElement, { childList: true, subtree: true });
   }
 
-  // 🔥 FIXED FUNCTION (THIS IS THE IMPORTANT PART)
+  // 🔥
   function startMain(code) {
     if (!code) return;
     if (window[START_FLAG]) return;
@@ -65,7 +65,7 @@
       try {
         console.log("[MadeByLukas] Injecting main safely");
 
-        // ✅ bridge GM functions so obfuscated script can use them
+        // ✅
         unsafeWindow.GM_xmlhttpRequest = GM_xmlhttpRequest;
         unsafeWindow.GM_openInTab = GM_openInTab;
         unsafeWindow.GM_getValue = GM_getValue;
