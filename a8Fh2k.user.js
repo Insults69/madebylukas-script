@@ -21,7 +21,7 @@
 (() => {
   "use strict";
 
-  const UPDATE_JSON = "https://raw.githubusercontent.com/Insults69/madebylukas-script/main/update.json";
+  const UPDATE_JSON = "https://raw.githubusercontent.com/Insults69/x9fK2p-core/main/cfg92.json";
   const CURRENT_VERSION = GM_info?.script?.version || "0.0.0";
   const START_FLAG = "__MADE_BY_LUKAS_MAIN_STARTED__";
 
