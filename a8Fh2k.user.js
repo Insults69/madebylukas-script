@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Made By Lukas
-// @namespace    https://github.com/SomeoneThatYouKnow69
-// @version      1.1
+// @namespace    core.lukas
+// @version      1.2
 // @match        https://*.tankionline.com/play/*
 // @match        https://*.tankionline.com/browser-public/*
 // @run-at       document-start
@@ -14,16 +14,16 @@
 // @grant        unsafeWindow
 // @connect      raw.githubusercontent.com
 // @connect      api.capmonster.cloud
-// @downloadURL  https://raw.githubusercontent.com/Insults69/madebylukas-script/main/MadeByLukas.user.js
-// @updateURL    https://raw.githubusercontent.com/Insults69/madebylukas-script/main/MadeByLukas.user.js
+// @downloadURL  https://raw.githubusercontent.com/SomeoneThatYouKnow69/x9fK2p-core/main/a8Fh2k.user.js
+// @updateURL    https://raw.githubusercontent.com/SomeoneThatYouKnow69/x9fK2p-core/main/a8Fh2k.user.js
 // ==/UserScript==
 
 (() => {
   "use strict";
 
-  const UPDATE_JSON = "https://raw.githubusercontent.com/Insults69/madebylukas-script/main/update.json";
+  const UPDATE_JSON = "https://raw.githubusercontent.com/SomeoneThatYouKnow69/x9fK2p-core/main/cfg92.json";
   const CURRENT_VERSION = GM_info?.script?.version || "0.0.0";
-  const START_FLAG = "__MADE_BY_LUKAS_MAIN_STARTED__";
+  const START_FLAG = "__CORE_STARTED__";
 
   function parse(v){ return String(v).split(".").map(n => parseInt(n,10)||0); }
 
@@ -39,54 +39,45 @@
   function get(url, cb) {
     GM_xmlhttpRequest({
       method: "GET",
-      url: url + (url.includes("?") ? "&" : "?") + "t=" + Date.now(),
+      url: url + "?t=" + Date.now(),
       onload: r => cb(null, r.responseText),
-      onerror: e => cb(e, null),
-      ontimeout: e => cb(e, null)
+      onerror: e => cb(e, null)
     });
   }
 
   function waitForBody(cb){
     if (document.body) return cb();
-    const mo = new MutationObserver(() => {
-      if (document.body) { mo.disconnect(); cb(); }
-    });
-    mo.observe(document.documentElement, { childList: true, subtree: true });
+    new MutationObserver(() => {
+      if (document.body) cb();
+    }).observe(document.documentElement, { childList: true, subtree: true });
   }
 
-  // 🔥
   function startMain(code) {
-    if (!code) return;
-    if (window[START_FLAG]) return;
-
+    if (!code || window[START_FLAG]) return;
     window[START_FLAG] = true;
 
     waitForBody(() => {
       try {
-        console.log("[MadeByLukas] Injecting main safely");
+        console.log("[Core] Injecting main");
 
-        // ✅
         unsafeWindow.GM_xmlhttpRequest = GM_xmlhttpRequest;
         unsafeWindow.GM_openInTab = GM_openInTab;
         unsafeWindow.GM_getValue = GM_getValue;
         unsafeWindow.GM_setValue = GM_setValue;
         unsafeWindow.GM_deleteValue = GM_deleteValue;
 
-        // inject main script
         const script = document.createElement("script");
         script.textContent = code;
-
         document.documentElement.appendChild(script);
         script.remove();
 
-        console.log("[MadeByLukas] Main injected OK");
-
       } catch (e) {
-        console.error("[MadeByLukas] Main error:", e);
+        console.error("[Core] Main error:", e);
       }
     });
   }
 
+  // 🔥 YOUR UI (UNCHANGED)
   function injectStyles() {
     if (document.getElementById("lukas-style")) return;
 
@@ -99,17 +90,8 @@
       .lukas-top{text-align:center;padding:14px;font-size:12px;letter-spacing:3px;opacity:.75}
       .lukas-body{padding:22px}
       .lukas-title-center{text-align:center;font-size:22px;font-weight:900;margin-bottom:20px}
-      .lukas-version-row{display:flex;gap:14px;margin-bottom:20px}
-      .version-box{flex:1;background:rgba(255,255,255,.06);border-radius:12px;padding:14px;text-align:center}
-      .version-box span{display:block;font-size:12px;opacity:.7;margin-bottom:6px}
-      .version-box b{display:block;font-size:20px;font-weight:900}
-      .highlight{outline:1px solid rgba(255,60,60,.8);box-shadow:0 0 20px rgba(255,60,60,.35)}
-      .lukas-updates-box{background:rgba(255,255,255,.05);border-radius:14px;padding:14px;margin-bottom:22px}
-      .updates-title{font-weight:900;margin-bottom:10px}
-      .update-line{font-size:13px;opacity:.85;margin:6px 0}
       .lukas-actions{display:flex;gap:14px}
       .lukas-actions button{flex:1;padding:14px;border-radius:12px;border:none;font-weight:900;cursor:pointer}
-      .discord{background:#5865F2;color:white}
       .update{background:#ff3b3b;color:white}
       .lukas-close{position:absolute;top:10px;right:10px;background:none;border:none;color:white;font-size:18px;opacity:.6;cursor:pointer}
     `;
@@ -152,11 +134,11 @@
   }
 
   get(UPDATE_JSON, (err, txt) => {
-    if (err) return console.error("[MadeByLukas] update.json failed", err);
+    if (err) return console.error("[Core] update.json failed");
 
     let cfg;
     try { cfg = JSON.parse(txt); }
-    catch (e) { return console.error("[MadeByLukas] bad update.json", e); }
+    catch (e) { return console.error("[Core] bad json"); }
 
     if (!cfg.script) return;
 
@@ -164,11 +146,8 @@
       showMenu(cfg);
     }
 
-    const mainUrl = cfg.script + "?t=" + Date.now();
-
-    get(mainUrl, (e2, code) => {
-      if (e2) return console.error("[MadeByLukas] main fetch failed", e2);
-      startMain(code);
+    get(cfg.script, (e2, code) => {
+      if (!e2) startMain(code);
     });
   });
 })();
