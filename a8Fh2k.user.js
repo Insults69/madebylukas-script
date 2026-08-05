@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Made By Lukas
 // @namespace    core.lukas
-// @version      2.0
+// @version      2.1
 // @updateURL    https://raw.githubusercontent.com/SomeoneThatYouKnow69/x9fK2p-core/main/a8Fh2k.user.js
 // @downloadURL  https://raw.githubusercontent.com/SomeoneThatYouKnow69/x9fK2p-core/main/a8Fh2k.user.js
 // @match        https://*.tankionline.com/play/*
@@ -15,6 +15,7 @@
 // @grant        GM_deleteValue
 // @grant        unsafeWindow
 // @connect      raw.githubusercontent.com
+// @connect      api.capmonster.cloud
 // ==/UserScript==
 
 (() => {
