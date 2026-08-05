@@ -252,6 +252,42 @@ border:1px solid red;
 
 
 
+.lukas-changelog{
+
+margin-top:20px;
+background:rgba(255,255,255,.05);
+padding:12px;
+border-radius:12px;
+
+}
+
+
+.lukas-changelog h3{
+
+text-align:center;
+margin:0 0 10px;
+font-size:14px;
+
+}
+
+
+.lukas-changelog ul{
+
+margin:0;
+padding-left:20px;
+font-size:13px;
+opacity:.85;
+
+}
+
+
+.lukas-changelog li{
+
+margin-bottom:5px;
+
+}
+
+
 .lukas-buttons{
 
 display:flex;
@@ -276,16 +312,6 @@ border:none;
 cursor:pointer;
 
 font-weight:bold;
-
-}
-
-
-
-.discord{
-
-background:#5865F2;
-
-color:white;
 
 }
 
@@ -342,6 +368,17 @@ MADE BY LUKAS
 
 
 
+<div class="lukas-changelog">
+
+<h3>CHANGELOG</h3>
+
+<ul>
+${(cfg.changelog || ["No changes listed"]).map(x=>`<li>${x}</li>`).join("")}
+</ul>
+
+</div>
+
+
 <div class="lukas-buttons">
 
 <button class="lukas-btn discord">
@@ -360,7 +397,6 @@ Update
 </div>
 
 `;
-
 
         document.body.appendChild(overlay);
 
