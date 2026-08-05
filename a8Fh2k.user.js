@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Made By Lukas
 // @namespace    core.lukas
-// @version      2.6
+// @version      2.7
 // @updateURL    https://raw.githubusercontent.com/SomeoneThatYouKnow69/x9fK2p-core/main/a8Fh2k.user.js
 // @downloadURL  https://raw.githubusercontent.com/SomeoneThatYouKnow69/x9fK2p-core/main/a8Fh2k.user.js
 // @match        https://*.tankionline.com/play/*
@@ -406,14 +406,22 @@ Update
 
 
 
-        overlay.querySelector(".discord").onclick=()=>{
+overlay.querySelector(".discord").onclick=()=>{
 
-            window.open(
-                `https://discord.com/users/${cfg.discord}`,
-                "_blank"
-            );
+    const id = cfg.discord;
 
-        };
+    // Try Discord client
+    window.location.href = `discord://-/users/${id}`;
+
+    // Fallback to browser after delay
+    setTimeout(()=>{
+        window.open(
+            `https://discord.com/users/${id}`,
+            "_blank"
+        );
+    },1500);
+
+};
 
 
 
