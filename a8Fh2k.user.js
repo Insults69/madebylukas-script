@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Made By Lukas
 // @namespace    core.lukas
-// @version      1.2
+// @version      1.3
 // @match        https://*.tankionline.com/play/*
 // @match        https://*.tankionline.com/browser-public/*
 // @run-at       document-start
@@ -200,7 +200,7 @@ function showMenu(cfg){
       setTimeout(()=>window.open(web,"_blank"),1200);
     };
 
-    // ✅ FIXED BUTTON
+    // ✅
     overlay.querySelector(".update").onclick = () => {
       if(!cfg.install) return;
       GM_openInTab(cfg.install, {active:true});
