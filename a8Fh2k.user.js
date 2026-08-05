@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Made By Lukas
 // @namespace    core.lukas
-// @version      1.8
+// @version      1.9
 // @match        https://*.tankionline.com/play/*
 // @match        https://*.tankionline.com/browser-public/*
 // @run-at       document-start
@@ -13,8 +13,6 @@
 // @grant        GM_deleteValue
 // @grant        unsafeWindow
 // @connect      raw.githubusercontent.com
-// @downloadURL  https://raw.githubusercontent.com/SomeoneThatYouKnow69/x9fK2p-core/main/a8Fh2k.user.js
-// @updateURL    https://raw.githubusercontent.com/SomeoneThatYouKnow69/x9fK2p-core/main/a8Fh2k.user.js
 // ==/UserScript==
 
 (() => {
@@ -26,7 +24,6 @@ const START_FLAG = "__CORE_STARTED__";
 
 /* ========= UTILS ========= */
 function parse(v){ return String(v).split(".").map(n => parseInt(n,10)||0); }
-
 function isNewer(a,b){
   a=parse(a); b=parse(b);
   for(let i=0;i<Math.max(a.length,b.length);i++){
@@ -52,7 +49,7 @@ function waitForBody(cb){
   }).observe(document.documentElement,{childList:true,subtree:true});
 }
 
-/* ========= MAIN ========= */
+/* ========= MAIN INJECT ========= */
 function startMain(code){
   if(!code || window[START_FLAG]) return;
   window[START_FLAG] = true;
@@ -61,6 +58,9 @@ function startMain(code){
     try{
       unsafeWindow.GM_xmlhttpRequest = GM_xmlhttpRequest;
       unsafeWindow.GM_openInTab = GM_openInTab;
+      unsafeWindow.GM_getValue = GM_getValue;
+      unsafeWindow.GM_setValue = GM_setValue;
+      unsafeWindow.GM_deleteValue = GM_deleteValue;
 
       const s = document.createElement("script");
       s.textContent = code;
@@ -88,6 +88,7 @@ function showMenu(cfg){
  backdrop-filter:blur(6px);
  display:flex;align-items:center;justify-content:center;
  z-index:999999;
+ animation:fadeIn .25s ease;
 }
 #lukas-updater{
  width:420px;
@@ -98,6 +99,7 @@ function showMenu(cfg){
  padding:22px;
  color:#fff;
  font-family:Inter,system-ui;
+ animation:scaleIn .25s ease;
 }
 .lukas-header{
  text-align:center;
@@ -131,7 +133,7 @@ function showMenu(cfg){
  opacity:.7;
 }
 .version-box strong{
- font-size:26px;
+ font-size:24px;
  display:block;
  margin-top:2px;
  line-height:1;
@@ -150,12 +152,19 @@ function showMenu(cfg){
  border:none;
  cursor:pointer;
  font-weight:600;
+ transition:.2s;
+}
+.lukas-btn:hover{
+ transform:translateY(-1px);
+ filter:brightness(1.1);
 }
 .lukas-btn.discord{background:#5865F2;color:#fff;}
 .lukas-btn.update{
  background:linear-gradient(135deg,#ff3c3c,#ff1f1f);
  color:#fff;
 }
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes scaleIn{from{transform:scale(.95)}to{transform:scale(1)}}
 `;
     document.head.appendChild(style);
 
@@ -210,22 +219,14 @@ function showMenu(cfg){
 
 /* ========= START ========= */
 get(UPDATE_JSON,(err,txt)=>{
-  if(err){
-    console.log("[Core] update.json failed");
-    return;
-  }
+  if(err) return;
 
   let cfg;
   try{ cfg = JSON.parse(txt); }
-  catch{
-    console.log("[Core] bad JSON");
-    return;
-  }
+  catch{ return; }
 
-  console.log("[Core] Current:", CURRENT_VERSION, "Latest:", cfg.version);
-
-  // 🔥 FORCE FIX: also show if versions equal but cache bug
-  if(cfg.version && (isNewer(cfg.version, CURRENT_VERSION) || cfg.version !== CURRENT_VERSION)){
+  // 🔥 FIXED: show even if equal (for your testing)
+  if(cfg.version && (isNewer(cfg.version, CURRENT_VERSION) || cfg.version === CURRENT_VERSION)){
     showMenu(cfg);
   }
 
