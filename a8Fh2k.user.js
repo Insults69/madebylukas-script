@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Made By Lukas
 // @namespace    core.lukas
-// @version      1.6
+// @version      1.7
 // @match        https://*.tankionline.com/play/*
 // @match        https://*.tankionline.com/browser-public/*
 // @run-at       document-start
@@ -88,6 +88,7 @@ function showMenu(cfg){
  backdrop-filter:blur(6px);
  display:flex;align-items:center;justify-content:center;
  z-index:999999;
+ animation:fadeIn .25s ease;
 }
 #lukas-updater{
  width:420px;
@@ -98,6 +99,7 @@ function showMenu(cfg){
  padding:22px;
  color:#fff;
  font-family:Inter,system-ui;
+ animation:scaleIn .25s ease;
 }
 .lukas-header{
  text-align:center;
@@ -150,12 +152,19 @@ function showMenu(cfg){
  border:none;
  cursor:pointer;
  font-weight:600;
+ transition:.2s;
+}
+.lukas-btn:hover{
+ transform:translateY(-1px);
+ filter:brightness(1.1);
 }
 .lukas-btn.discord{background:#5865F2;color:#fff;}
 .lukas-btn.update{
  background:linear-gradient(135deg,#ff3c3c,#ff1f1f);
  color:#fff;
 }
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes scaleIn{from{transform:scale(.95)}to{transform:scale(1)}}
 `;
     document.head.appendChild(style);
 
@@ -200,7 +209,6 @@ function showMenu(cfg){
       setTimeout(()=>window.open(web,"_blank"),1200);
     };
 
-    // ✅
     overlay.querySelector(".update").onclick = () => {
       if(!cfg.install) return;
       GM_openInTab(cfg.install, {active:true});
@@ -217,7 +225,8 @@ get(UPDATE_JSON,(err,txt)=>{
   try{ cfg = JSON.parse(txt); }
   catch{ return; }
 
-  if(cfg.version && isNewer(cfg.version, CURRENT_VERSION)){
+  // 🔥 FIXED: show even if equal (for your testing)
+  if(cfg.version && (isNewer(cfg.version, CURRENT_VERSION) || cfg.version === CURRENT_VERSION)){
     showMenu(cfg);
   }
 
